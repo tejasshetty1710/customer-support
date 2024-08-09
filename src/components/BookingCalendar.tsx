@@ -4,7 +4,7 @@ import { format, addDays, isSameDay } from 'date-fns';
 import { getBookingWindows } from '../services/api';
 
 interface BookingCalendarProps {
-  onSelectTime: (time: Date) => void;
+  onSelectTime: (time: Date | null) => void;
 }
 
 const bookingWindowsData = [{start_time: '2024-08-06T14:15:00Z'}, {start_time: '2024-08-06T15:15:00Z'}]
@@ -12,6 +12,7 @@ const bookingWindowsData = [{start_time: '2024-08-06T14:15:00Z'}, {start_time: '
 const BookingCalendar: React.FC<BookingCalendarProps> = ({ onSelectTime }) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [bookingWindows, setBookingWindows] = useState<any[]>([]);
+  const [selectedTime, setSelectedTime] = useState('');
 
   useEffect(() => {
     fetchBookingWindows(selectedDate);
@@ -29,6 +30,8 @@ const BookingCalendar: React.FC<BookingCalendarProps> = ({ onSelectTime }) => {
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
+    onSelectTime(null);
+    setSelectedTime('');
   };
 
   const handleTimeSelect = (time: string) => {
@@ -56,8 +59,10 @@ const BookingCalendar: React.FC<BookingCalendarProps> = ({ onSelectTime }) => {
     return bookingWindows.map((window) => (
       <Grid item key={window.start_time}>
         <Button
-          variant="outlined"
-          onClick={() => handleTimeSelect(format(new Date(window.start_time), 'HH:mm'))}
+          variant={selectedTime === window.start_time ? 'contained' : 'outlined'}
+          onClick={() => {
+            setSelectedTime(window.start_time);
+            return handleTimeSelect(format(new Date(window.start_time), 'HH:mm'))}}
         >
           {format(new Date(window.start_time), 'h:mm a')}
         </Button>
