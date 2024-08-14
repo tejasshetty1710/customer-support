@@ -1,6 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -8,6 +9,7 @@ const app = express();
 const port = process.env.PORT || 9000;
 
 app.use(express.json());
+app.use(cors());
 
 const HCP_BASE_URL = "https://api.housecallpro.com";
 const API_KEY = process.env.HCP_API_KEY;
