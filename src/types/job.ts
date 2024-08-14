@@ -1,4 +1,4 @@
-import { Customer } from './customer';
+import { Customer } from "./customer";
 
 export interface Job {
   id: number;
@@ -6,7 +6,7 @@ export interface Job {
   customer?: Customer; // Optional, in case customer details are included
   title: string;
   description: string;
-  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+  status: "scheduled" | "in_progress" | "completed" | "cancelled";
   scheduled_date: string;
   completed_date?: string;
   total_amount: number;
@@ -17,9 +17,9 @@ export interface Job {
 export interface GetJobsRequest {
   page: number;
   page_size: number;
-  sort_by?: 'scheduledDate' | 'status' | 'totalAmount';
-  sort_order?: 'asc' | 'desc';
-  status?: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+  sort_by?: "scheduledDate" | "status" | "totalAmount";
+  sort_order?: "asc" | "desc";
+  status?: "scheduled" | "in_progress" | "completed" | "cancelled";
   start_date?: string;
   end_date?: string;
   customer_id?: string | null;
@@ -38,7 +38,7 @@ export interface UpdateJobRequest {
   id: number;
   title?: string;
   description?: string;
-  status?: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+  status?: "scheduled" | "in_progress" | "completed" | "cancelled";
   scheduled_date?: string;
   completed_date?: string;
   total_amount?: number;

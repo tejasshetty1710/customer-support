@@ -1,17 +1,17 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Typography, Button, TextField, Grid } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { toast } from 'react-toastify';
-import { createCustomer } from '../services/api';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Typography, Button, TextField, Grid } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { toast } from "react-toastify";
+import { createCustomer } from "../services/api";
 
 const schema = yup.object().shape({
-  first_name: yup.string().required('First name is required'),
-  last_name: yup.string().required('Last name is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
-  mobile_number: yup.string().required('Mobile number is required'),
+  first_name: yup.string().required("First name is required"),
+  last_name: yup.string().required("Last name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  mobile_number: yup.string().required("Mobile number is required"),
   home_number: yup.string(),
   work_number: yup.string(),
   company: yup.string(),
@@ -19,28 +19,34 @@ const schema = yup.object().shape({
 
 const CreateCustomer: React.FC = () => {
   const navigate = useNavigate();
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(schema),
   });
 
   const onSubmit = async (data: any) => {
     try {
       const customer = await createCustomer(data);
-      toast.success('Customer created successfully');
-      navigate('/jobs', {
+      toast.success("Customer created successfully");
+      navigate("/jobs", {
         state: {
-            customerId: customer?.id,
-            customer: customer
-        }
-    });
+          customerId: customer?.id,
+          customer: customer,
+        },
+      });
     } catch (error) {
-      toast.error('Failed to create customer');
+      toast.error("Failed to create customer");
     }
   };
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>Create New Customer</Typography>
+      <Typography variant="h4" gutterBottom>
+        Create New Customer
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -113,11 +119,7 @@ const CreateCustomer: React.FC = () => {
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Home Number"
-                  fullWidth
-                />
+                <TextField {...field} label="Home Number" fullWidth />
               )}
             />
           </Grid>
@@ -127,11 +129,7 @@ const CreateCustomer: React.FC = () => {
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Work Number"
-                  fullWidth
-                />
+                <TextField {...field} label="Work Number" fullWidth />
               )}
             />
           </Grid>
@@ -141,16 +139,17 @@ const CreateCustomer: React.FC = () => {
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Company"
-                  fullWidth
-                />
+                <TextField {...field} label="Company" fullWidth />
               )}
             />
           </Grid>
         </Grid>
-        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '1rem' }}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          style={{ marginTop: "1rem" }}
+        >
           Create Customer
         </Button>
       </form>

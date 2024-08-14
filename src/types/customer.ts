@@ -1,6 +1,6 @@
 // Customer type
 export type Customer = {
-  object: 'customer';
+  object: "customer";
   id: string;
   created_at: string;
   updated_at: string;
@@ -21,7 +21,7 @@ export type Customer = {
   archived: boolean;
   parent_customer_id: string | null;
   tags: {
-    object: 'list';
+    object: "list";
     data: any[];
     url: string;
   };
@@ -34,63 +34,65 @@ export type Customer = {
     last_service_at: string | null;
   };
   addresses: {
-    object: 'list';
+    object: "list";
     data: any[];
     url: string;
   };
   lead_source: string | null;
 };
-  
-  // Request types
-  export interface GetCustomersRequest {
-    page: number;
-    page_size: number;
-    sort_by?: 'name' | 'dateJoined' | 'totalSpent';
-    sort_order?: 'asc' | 'desc';
-    q?: string;
-  }
-  
-  export interface CreateCustomerRequest {
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone: string;
-    address: string;
-  }
-  
-  export interface UpdateCustomerRequest {
-    id: number;
-    first_name?: string;
-    last_name?: string;
-    email?: string;
-    phone?: string;
-    address?: string;
-  }
-  
-  // Response types
-  export interface GetCustomersResponse {
+
+// Request types
+export interface GetCustomersRequest {
+  page: number;
+  page_size: number;
+  sort_by?: "name" | "dateJoined" | "totalSpent";
+  sort_order?: "asc" | "desc";
+  q?: string;
+}
+
+export interface CreateCustomerRequest {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address: string;
+}
+
+export interface UpdateCustomerRequest {
+  id: number;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+}
+
+// Response types
+export interface GetCustomersResponse {
+  data: {
     customers: Customer[];
-    total_count: number;
+    total_items: number;
     page: number;
     page_size: number;
-  }
-  
-  export interface CreateCustomerResponse {
-    id: any;
-    customer: Customer;
-  }
-  
-  export interface UpdateCustomerResponse {
-    customer: Customer;
-  }
-  
-  export interface DeleteCustomerResponse {
-    success: boolean;
-    deletedCustomerId: number;
-  }
-  
-  // Error response type
-  export interface ErrorResponse {
-    message: string;
-    code: string;
-  }
+  };
+}
+
+export interface CreateCustomerResponse {
+  id: any;
+  customer: Customer;
+}
+
+export interface UpdateCustomerResponse {
+  customer: Customer;
+}
+
+export interface DeleteCustomerResponse {
+  success: boolean;
+  deletedCustomerId: number;
+}
+
+// Error response type
+export interface ErrorResponse {
+  message: string;
+  code: string;
+}

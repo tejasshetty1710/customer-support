@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Typography, Button, TextField, Grid, Paper } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { toast } from 'react-toastify';
-import { createJob } from '../services/api';
-import BookingCalendar from '../components/BookingCalendar';
-import { customerData } from '../mockData/customerData';
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Typography, Button, TextField, Grid, Paper } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { toast } from "react-toastify";
+import { createJob } from "../services/api";
+import BookingCalendar from "../components/BookingCalendar";
+import { customerData } from "../mockData/customerData";
+import DateRangePicker from "../components/DateRangePicker";
 
 const schema = yup.object().shape({
   customer_id: yup.string(),
@@ -17,17 +18,25 @@ const schema = yup.object().shape({
 const CreateJob: React.FC = () => {
   const navigate = useNavigate();
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(null);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(schema),
   });
   let location = useLocation();
-  const customerId = location.state?.customerId; 
+  const customerId = location.state?.customerId;
 
-  const customer = customerData.find((customer) => {return customer.id === customerId}) ?? location?.state.customer;
+  const customer =
+    customerData.find((customer) => {
+      return customer.id === customerId;
+    }) ?? location?.state.customer;
 
   const onSubmit = async (data: any) => {
-    if (!selectedTime) {
-      toast.error('Please select a booking time');
+    if (!selectedTime && !selectedEndTime) {
+      toast.error("Please select a start and end time");
       return;
     }
 
@@ -36,25 +45,33 @@ const CreateJob: React.FC = () => {
         customer_id: customerId,
         address_id: null,
         schedule: {
-            scheduleStart: selectedTime.toISOString()
+          scheduled_start: selectedTime?.toISOString(),
+          scheduled_end: selectedEndTime?.toISOString(),
         },
       };
       // @ts-ignore
       await createJob(jobData);
-      toast.success('Job created successfully');
-      navigate('/jobs');
+      toast.success("Job created successfully");
+      navigate("/jobs", {
+        state: {
+          customerId,
+          customer,
+        },
+      });
     } catch (error) {
-      toast.error('Failed to create job');
+      toast.error("Failed to create job");
     }
   };
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>Create New Job</Typography>
+      <Typography variant="h4" gutterBottom>
+        Create New Job
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <Paper elevation={3} style={{ padding: '1rem' }}>
+            <Paper elevation={3} style={{ padding: "1rem" }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Controller
@@ -96,18 +113,31 @@ const CreateJob: React.FC = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Paper elevation={3} style={{ padding: '1rem' }}>
-              <Typography variant="h6" gutterBottom>Select Booking Time</Typography>
-              <BookingCalendar onSelectTime={setSelectedTime} />
-              {selectedTime && (
+            <Paper elevation={3} style={{ padding: "1rem" }}>
+              <Typography variant="h6" gutterBottom>
+                Select Booking Time
+              </Typography>
+              <DateRangePicker
+                startDate={selectedTime}
+                endDate={selectedEndTime}
+                setEndDate={setSelectedEndTime}
+                setStartDate={setSelectedTime}
+              />
+              {/* <BookingCalendar onSelectTime={setSelectedTime} /> */}
+              {/* {selectedTime && (
                 <Typography variant="body1" style={{ marginTop: '1rem' }}>
                   Selected time: {selectedTime.toLocaleString()}
                 </Typography>
-              )}
+              )} */}
             </Paper>
           </Grid>
         </Grid>
-        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '1rem' }}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          style={{ marginTop: "1rem" }}
+        >
           Create Job
         </Button>
       </form>

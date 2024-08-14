@@ -1,7 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { People, Work } from '@mui/icons-material';
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import { People, Work } from "@mui/icons-material";
 
 const Sidebar: React.FC = () => {
   return (
@@ -10,16 +16,20 @@ const Sidebar: React.FC = () => {
       sx={{
         width: 240,
         flexShrink: 0,
-        '& .MuiDrawer-paper': { width: 240, boxSizing: 'border-box' },
+        "& .MuiDrawer-paper": { width: 240, boxSizing: "border-box" },
       }}
     >
       <List>
         <ListItem button component={Link} to="/customers">
-          <ListItemIcon><People /></ListItemIcon>
+          <ListItemIcon>
+            <People />
+          </ListItemIcon>
           <ListItemText primary="Create a new job" />
         </ListItem>
         <ListItem button component={Link} to="/jobs">
-          <ListItemIcon><Work /></ListItemIcon>
+          <ListItemIcon>
+            <Work />
+          </ListItemIcon>
           <ListItemText primary="Jobs" />
         </ListItem>
       </List>

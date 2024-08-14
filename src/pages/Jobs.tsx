@@ -1,9 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom';
-import { Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
-import { toast } from 'react-toastify';
-import { getJobs } from '../services/api';
-import { customerData } from '../mockData/customerData';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Link,
+  createSearchParams,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import {
+  Typography,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TablePagination,
+} from "@mui/material";
+import { toast } from "react-toastify";
+import { getJobs } from "../services/api";
+import { customerData } from "../mockData/customerData";
 
 const Jobs: React.FC = () => {
   const [jobs, setJobs] = useState([]);
@@ -13,10 +29,9 @@ const Jobs: React.FC = () => {
   const navigate = useNavigate();
   let location = useLocation();
 
-  const customerId = location.state?.customerId; 
+  const customerId = location.state?.customerId;
 
-  console.log(location.state, 'BRUHH')
- 
+  console.log(location.state, "BRUHH");
 
   useEffect(() => {
     fetchJobs();
@@ -24,11 +39,15 @@ const Jobs: React.FC = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await getJobs({page: page + 1, page_size: rowsPerPage, customer_id: customerId});
-      setJobs(response.data.data.data);
-      setTotalJobs(response.data.total_count);
+      const response = await getJobs({
+        page: page + 1,
+        page_size: rowsPerPage,
+        customer_id: customerId,
+      });
+      setJobs(response.data.jobs);
+      setTotalJobs(response.data.total_items);
     } catch (error) {
-      toast.error('Failed to fetch jobs');
+      toast.error("Failed to fetch jobs");
     }
   };
 
@@ -36,34 +55,48 @@ const Jobs: React.FC = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const customer = customerData.find((customer) => {return customer.id === customerId}) ?? location.state?.customer;
+  const customer =
+    customerData.find((customer) => {
+      return customer.id === customerId;
+    }) ?? location.state?.customer;
 
   const handleCreateJob = useCallback(() => {
-    return navigate('/jobs/create', {
-        state: {
-            customerId,
-            customer
-        }
-    })
+    return navigate("/jobs/create", {
+      state: {
+        customerId,
+        customer,
+      },
+    });
   }, [customerId, customer]);
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>Jobs</Typography>
-      {
-        customer &&  <Button onClick={handleCreateJob} variant="contained" color="primary" style={{ marginBottom: '1rem' }}>
-        Create New Job
-      </Button>
-      }
-      {
-      
-      customerId && customer && <Typography variant='h6' gutterBottom>Existing jobs for {customer?.display_name}</Typography>
-      }
+      <Typography variant="h4" gutterBottom>
+        Jobs
+      </Typography>
+      {customer && (
+        <Button
+          onClick={handleCreateJob}
+          variant="contained"
+          color="primary"
+          style={{ marginBottom: "1rem" }}
+        >
+          Create New Job
+        </Button>
+      )}
+      {customerId && customer && (
+        <Typography variant="h6" gutterBottom>
+          Existing jobs for {customer?.first_name ?? ""}{" "}
+          {customer?.last_name ?? ""}
+        </Typography>
+      )}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -78,7 +111,9 @@ const Jobs: React.FC = () => {
             {jobs.map((job: any) => (
               <TableRow key={job.id}>
                 <TableCell>{job.id}</TableCell>
-                <TableCell>{job.customer?.first_name} {job.customer?.last_name}</TableCell>
+                <TableCell>
+                  {job.customer?.first_name} {job.customer?.last_name}
+                </TableCell>
                 <TableCell>{job.description}</TableCell>
                 <TableCell>{job.work_status}</TableCell>
               </TableRow>
