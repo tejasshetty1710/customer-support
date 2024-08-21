@@ -42,7 +42,8 @@ const Jobs: React.FC = () => {
       const response = await getJobs({
         page: page + 1,
         page_size: rowsPerPage,
-        customer_id: customerId,
+        ...(customerId ? { customer_id: customerId} : {}),
+        // customer_id: customerId,
       });
       setJobs(response.data.jobs);
       setTotalJobs(response.data.total_items);
